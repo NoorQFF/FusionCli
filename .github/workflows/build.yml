@@ -1,4 +1,4 @@
-name: Build Python CLI Tool
+name: Build Fusion, a Python CLI Tool
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
 
     - name: Upload build artifacts
       if: success()
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: python-cli-binaries
         path: dist/*
