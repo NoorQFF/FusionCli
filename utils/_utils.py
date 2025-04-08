@@ -51,6 +51,10 @@ def runSystemFittedProcess(cmd: str):
             capture_output=True,
             text=True
         )
+        stop_spinner = True
+        spinner_thread.join()
+        sys.stdout.write("\r\033[32m✓ Done.                       \033[0m\n\n")
+        sys.stdout.flush()
         return result.stdout.strip()
     except subprocess.CalledProcessError as e:
         throwError(f"Command: `\033[90m{' '.join(e.cmd)}\033[31m`\nfailed with exit code {e.returncode}\n{e.stderr}")
@@ -58,8 +62,3 @@ def runSystemFittedProcess(cmd: str):
         throwError("Command not found. Please ensure the command or executable exists.")
     except OSError as e:
         throwError(f"OS error occurred: {e}")
-    finally:
-        stop_spinner = True
-        spinner_thread.join()
-        sys.stdout.write("\r\033[90m✓ Done.                       \033[0m\n")
-        sys.stdout.flush()
