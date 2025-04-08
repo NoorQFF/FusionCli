@@ -1,9 +1,13 @@
-# Python env
+# Python virtual env
 .env
 
+# builds and artifacts
 *.egg-info/
 dist/
 build/
 
-
+# other scripts (not part of cli tool)
 misc_scripts/
+
+# secrets
+utils/__secrets.py
