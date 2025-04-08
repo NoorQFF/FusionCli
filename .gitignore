@@ -1,0 +1,9 @@
+# Python env
+.env
+
+*.egg-info/
+dist/
+build/
+
+
+misc_scripts/

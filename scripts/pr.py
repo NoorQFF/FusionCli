@@ -1,18 +1,11 @@
-#!/usr/bin/env python3
-import sys
-
 from utils._utils import SEPARATOR, getBasePathName, runSystemFittedProcess, throwError
 from utils.aws_utils import createPullRequestCommand
 from utils.cli_utils import CustomShell
 from utils.git_utils import getCurrentGitBranchName, getLatestCommitMessage
 from utils.repo_utils import runTests
 
-def main():
+def start_aws_pr(args):
     print("PR Tool running...")
-    if len(sys.argv) > 2:
-        throwError('Incorrect Usage.\nTry: python3 pr target')
-
-
     # runTests()
 
     # Get the current branch name and latest commit message
@@ -21,16 +14,13 @@ def main():
     base_path = getBasePathName()
     default_title = f"{current_branch.upper()}: {latest_commit_message}"
 
-    if len(sys.argv) == 2:
-        # DEFAULTS
-        if sys.argv[1] == '--d':
-            target = "development"
-            repository = base_path
-            title = default_title
-            desc = ""
-        else:
-            throwError(f'{sys.argv[1]} not a valid command')
-    else :
+    if args.default:
+        target = "development"
+        repository = base_path
+        title = default_title
+        desc = ""
+
+    else:
         with CustomShell() as cs:
             target = cs.customInput("Where is your destination?", "development")
             repository = cs.customInput("What is the name of the repository?", base_path)
@@ -43,6 +33,3 @@ def main():
     desc = desc.replace(" ", SEPARATOR)
 
     runSystemFittedProcess(createPullRequestCommand(current_branch, target, repository, title, desc), silent=False)
-
-if __name__ == "__main__":
-    main()
