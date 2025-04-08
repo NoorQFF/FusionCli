@@ -7,7 +7,8 @@ from utils.cli_utils import CustomShell
 from utils.git_utils import getCurrentGitBranchName, getLatestCommitMessage
 from utils.repo_utils import runTests
 
-if __name__ == "__main__":
+def main():
+    print("PR Tool running...")
     if len(sys.argv) > 2:
         throwError('Incorrect Usage.\nTry: python3 pr target')
 
@@ -41,4 +42,7 @@ if __name__ == "__main__":
     title = title.replace(" ", SEPARATOR)
     desc = desc.replace(" ", SEPARATOR)
 
-    runSystemFittedProcess(createPullRequestCommand(current_branch, target, repository, title, desc))
+    runSystemFittedProcess(createPullRequestCommand(current_branch, target, repository, title, desc), silent=False)
+
+if __name__ == "__main__":
+    main()
