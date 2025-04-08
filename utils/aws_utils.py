@@ -1,8 +1,7 @@
 import json
 import subprocess
 
-from utils.git_utils import getCurrentGitBranchName
-from utils._utils import getBasePathName, throwError
+from utils._utils import throwError
 
 def getCurrentAwsUser():
     try:
@@ -13,12 +12,12 @@ def getCurrentAwsUser():
     except:
         return None
 
-def createPullRequestCommand(destinationBranch: str, repositoryName: str, title: str, desc: str = '') -> str:
+def createPullRequestCommand(sourceBranch: str, destinationBranch: str, repositoryName: str, title: str, desc: str = '') -> str:
     if destinationBranch == None or destinationBranch == '':
         throwError('No Destination branch chosen')    
     if title == None or title == '':
         throwError('No title given to PR')
 
     prCmd = f"aws codecommit create-pull-request --title {title} --description {desc} "
-    prCmd += f'--targets repositoryName={repositoryName},sourceReference={getCurrentGitBranchName()},destinationReference={destinationBranch} --debug'
+    prCmd += f'--targets repositoryName={repositoryName},sourceReference={sourceBranch},destinationReference={destinationBranch}'
     return prCmd

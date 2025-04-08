@@ -3,7 +3,7 @@ import sys
 
 from utils._utils import SEPARATOR, getBasePathName, runSystemFittedProcess, throwError
 from utils.aws_utils import createPullRequestCommand
-from utils.cli_utils import customInput
+from utils.cli_utils import CustomShell
 from utils.git_utils import getCurrentGitBranchName, getLatestCommitMessage
 from utils.repo_utils import runTests
 
@@ -30,14 +30,15 @@ if __name__ == "__main__":
         else:
             throwError(f'{sys.argv[1]} not a valid command')
     else :
-        target = customInput("Where is your destination?", "development")
-        repository = customInput("What is the name of the repository?", base_path)
-        title = customInput("What is your PR named?", default_title)
-        desc = customInput("What is the description of your PR (optional)?", "")
+        with CustomShell() as cs:
+            target = cs.customInput("Where is your destination?", "development")
+            repository = cs.customInput("What is the name of the repository?", base_path)
+            title = cs.customInput("What is your PR named?", default_title)
+            desc = cs.customInput("What is the description of your PR (optional)?", "")
 
     repository = repository.replace(" ", SEPARATOR)
     target = target.replace(" ", SEPARATOR)
     title = title.replace(" ", SEPARATOR)
     desc = desc.replace(" ", SEPARATOR)
 
-    runSystemFittedProcess(createPullRequestCommand(target, repository, title, desc))
+    runSystemFittedProcess(createPullRequestCommand(current_branch, target, repository, title, desc))
