@@ -39,5 +39,5 @@ jobs:
       if: success()
       uses: actions/upload-artifact@v4
       with:
-        name: python-cli-${{ matrix.os }}
-        path: dist/*
+        name: fusion
+        path: dist-${{ matrix.os }}/*
