@@ -7,6 +7,9 @@ on:
     tags:
       - "release_*"
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -15,48 +18,48 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.13.2'
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.13.2'
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Install PyInstaller
-      run: pip install pyinstaller
+      - name: Install PyInstaller
+        run: pip install pyinstaller
 
-    - name: Build the application
-      run: |
-        pyinstaller --onefile fusion.py
-        mkdir dist-${{ matrix.os }}
-        mv dist/fusion* dist-${{ matrix.os }}/
+      - name: Build the application
+        run: |
+          pyinstaller --onefile fusion.py
+          mkdir dist-${{ matrix.os }}
+          mv dist/fusion* dist-${{ matrix.os }}/fusion  # Normalize filename
 
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: fusion-${{ matrix.os }}
-        path: dist-${{ matrix.os }}/*
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: fusion-${{ matrix.os }}
+          path: dist-${{ matrix.os }}/fusion
 
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-    - name: Download all artifacts
-      uses: actions/download-artifact@v4
-      with:
-        path: ./artifacts
-        merge-multiple: true  # <--- this is key to pull in all OS-specific uploads
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: ./artifacts
+          merge-multiple: true
 
-    - name: Create GitHub Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: ./artifacts/**
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./artifacts/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
