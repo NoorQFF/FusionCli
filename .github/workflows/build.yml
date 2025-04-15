@@ -51,7 +51,9 @@ jobs:
       - name: Install Inno Setup (Windows)
         if: runner.os == 'Windows'
         run: |
-          choco install innosetup
+          choco install innosetup -y
+          # Ensure the path is updated for innoisetup
+          $env:PATH = "$env:PATH;C:\Program Files (x86)\Inno Setup 6"
 
       - name: Create Windows .exe installer
         if: runner.os == 'Windows'
@@ -61,7 +63,7 @@ jobs:
           mv dist\\fusion.exe dist-windows\\fusion.exe
           
           # Use Inno Setup to create the installer
-          innoisetup.exe /INPUT=installer_script.iss /OUTPUT=dist-windows/fusion-installer.exe
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" build/installer_script.iss
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
