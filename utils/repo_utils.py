@@ -5,10 +5,8 @@ from utils._utils import runSystemFittedProcess
 
 def runTests():
     if os.path.exists('angular.json'):
-        print("Running 'ng test'...")
-        runSystemFittedProcess('ng test')
+        runSystemFittedProcess('ng test', silent=False)
     elif os.path.exists('pubspec.yaml'):
-        print("Running 'flutter test'...")
-        runSystemFittedProcess('flutter test')
+        runSystemFittedProcess('flutter test', silent=False)
     else:
         pass

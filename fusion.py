@@ -9,6 +9,7 @@ def main():
 
     pr_tool_parser = subparsers.add_parser("pr", help="Make an AWS Codecommit Pull Request in the current git repo")
     pr_tool_parser.add_argument("-d", "--default", action="store_true", help="Make a pr for the current git repo with default values")
+    pr_tool_parser.add_argument("-nt", "--no-test", action="store_true", help="Make a pr for the current git repo with default values")
 
     args = parser.parse_args()
     print(f"Parsed arguments: {args}")

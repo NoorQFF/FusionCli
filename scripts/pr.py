@@ -1,4 +1,4 @@
-from utils._utils import SEPARATOR, getBasePathName, runSystemFittedProcess, throwError
+from utils._utils import SEPARATOR, getBasePathName, runSystemFittedProcess
 from utils.aws_utils import createPullRequestCommand
 from utils.cli_utils import CustomShell
 from utils.git_utils import getCurrentGitBranchName, getLatestCommitMessage
@@ -6,7 +6,9 @@ from utils.repo_utils import runTests
 
 def start_aws_pr(args):
     print("PR Tool running...")
-    # runTests()
+
+    if not args.no_test:
+        runTests()
 
     # Get the current branch name and latest commit message
     current_branch = getCurrentGitBranchName()
