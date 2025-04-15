@@ -38,7 +38,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install ruby-full
-          gem install fpm
+          gem install --user-install fpm
 
       # macOS installer
       - name: Create macOS .pkg installer
