@@ -2,8 +2,6 @@ name: Build and Release Fusion, a Python CLI Tool
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "release_*"
 
@@ -34,27 +32,37 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
-      - name: Build the application
+      # macOS build
+      - name: Build for macOS
+        if: runner.os == 'macOS'
         run: |
-          # For macOS: Build a universal binary (x86_64 + arm64)
-          if [ $RUNNER_OS == 'macOS' ]; then
-            pyinstaller --onefile --target-arch x86_64 --target-arch arm64 fusion.py
-          else
-            pyinstaller --onefile fusion.py
-          fi
+          pyinstaller --onefile fusion.py
           mkdir dist-${{ matrix.os }}
-          mv dist/fusion* dist-${{ matrix.os }}/fusion  # Normalize filename
+          mv dist/fusion* dist-${{ matrix.os }}/fusion
+          chmod +x dist-${{ matrix.os }}/fusion
 
-      - name: Set execute permissions (macOS/Linux)
-        if: runner.os == 'MacOS' || runner.os == 'Linux'
+      # Windows build
+      - name: Build for Windows
+        if: runner.os == 'Windows'
         run: |
+          pyinstaller --onefile fusion.py
+          mkdir dist-${{ matrix.os }}
+          move dist\\fusion.exe dist-${{ matrix.os }}\\fusion.exe
+
+      # Linux build
+      - name: Build for Linux
+        if: runner.os == 'Linux'
+        run: |
+          pyinstaller --onefile fusion.py
+          mkdir dist-${{ matrix.os }}
+          mv dist/fusion* dist-${{ matrix.os }}/fusion
           chmod +x dist-${{ matrix.os }}/fusion
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: fusion-${{ matrix.os }}
-          path: dist-${{ matrix.os }}/fusion
+          path: dist-${{ matrix.os }}/*
 
   release:
     needs: build
