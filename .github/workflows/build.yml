@@ -70,8 +70,8 @@ jobs:
         with:
           name: fusion-installers-${{ matrix.os }}
           path: |
-            dist-macos/*.pkg
-            dist-windows/*.exe
+            dist-macos/fusion.pkg
+            dist-windows/fusion-installer.exe  # Only upload the installer exe, not the raw fusion.exe
 
   release:
     needs: build
