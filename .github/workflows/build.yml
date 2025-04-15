@@ -63,7 +63,7 @@ jobs:
           mv dist\\fusion.exe dist-windows\\fusion.exe
           
           # Use Inno Setup to create the installer
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" build/installer_script.iss
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
