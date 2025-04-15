@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Checkout code
@@ -39,8 +39,13 @@ jobs:
           pyinstaller --onefile fusion.py
           mkdir dist-macos
           mv dist/fusion dist-macos/fusion
-          # Use pkgbuild or create a .dmg for macOS
-          pkgbuild --identifier com.example.fusion --version 1.0 --install-location /usr/local/bin dist-macos/fusion dist-macos/fusion.pkg
+
+          # Create a directory for packaging
+          mkdir -p /tmp/fusion-package/usr/local/bin
+          cp dist-macos/fusion /tmp/fusion-package/usr/local/bin/
+
+          # Use pkgbuild to create the .pkg installer
+          pkgbuild --identifier com.example.fusion --version 1.0 --install-location /usr/local/bin --root /tmp/fusion-package dist-macos/fusion.pkg
 
       # Windows installer
       - name: Install Inno Setup (Windows)
@@ -54,10 +59,10 @@ jobs:
           pyinstaller --onefile fusion.py
           mkdir dist-windows
           mv dist\\fusion.exe dist-windows\\fusion.exe
-          # Use Inno Setup to create the installer, make sure to reference the .iss script
-          innoisetup.exe /INPUT=build/installer_script.iss /OUTPUT=dist-windows/fusion-installer.exe
+          
+          # Use Inno Setup to create the installer
+          innoisetup.exe /INPUT=installer_script.iss /OUTPUT=dist-windows/fusion-installer.exe
 
-      # Upload installer artifacts
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
