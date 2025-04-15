@@ -45,7 +45,7 @@ jobs:
           cp dist-macos/fusion /tmp/fusion-package/usr/local/bin/
 
           # Use pkgbuild to create the .pkg installer
-          pkgbuild --identifier com.example.fusion --version 1.0 --install-location /usr/local/bin --root /tmp/fusion-package dist-macos/fusion.pkg
+          pkgbuild --identifier com.example.fusion --version 1.0 --install-location / --root /tmp/fusion-package dist-macos/fusion.pkg
 
       # Windows installer
       - name: Install Inno Setup (Windows)

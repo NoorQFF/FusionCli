@@ -22,7 +22,7 @@ def getSystemFittedPath(path: str) -> str:
 
 def throwError(error: str):
     print(f"\033[31m\n!ERROR\n{error}\n\033[0m")
-    exit(-1)
+    sys.exit(-1)
 
 def runSystemFittedProcess(cmd: str, silent: bool = True):
     isWin = isOperatingSystemWindows()
