@@ -13,7 +13,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, windows-latest]
 
     steps:
       - name: Checkout code
@@ -31,14 +31,6 @@ jobs:
 
       - name: Install PyInstaller
         run: pip install pyinstaller
-
-      # Install fpm and other dependencies for Linux
-      - name: Install fpm (Linux)
-        if: runner.os == 'Linux'
-        run: |
-          sudo apt-get update
-          sudo apt-get install ruby-full
-          gem install --user-install fpm
 
       # macOS installer
       - name: Create macOS .pkg installer
@@ -65,15 +57,6 @@ jobs:
           # Use Inno Setup or NSIS to create the installer
           inno-compiler /INPUT=installer_script.iss /OUTPUT=dist-windows/fusion-installer.exe
 
-      # Linux installer (Debian-based)
-      - name: Create Linux .deb installer
-        if: runner.os == 'Linux'
-        run: |
-          pyinstaller --onefile fusion.py
-          mkdir dist-linux
-          mv dist/fusion dist-linux/fusion
-          fpm -s dir -t deb -n fusion -v 1.0 --prefix /usr/local/bin dist-linux/fusion
-
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -81,7 +64,6 @@ jobs:
           path: |
             dist-macos/*.pkg
             dist-windows/*.exe
-            dist-linux/*.deb
 
   release:
     needs: build
