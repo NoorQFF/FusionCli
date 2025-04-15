@@ -1,4 +1,4 @@
-name: Build and Release Fusion, a Python CLI Tool
+name: Build and Release Fusion CLI Tool with Installers
 
 on:
   push:
@@ -6,7 +6,8 @@ on:
       - "release_*"
 
 permissions:
-  contents: write  # Needed to create a GitHub release
+  contents: write   # For creating releases and uploading assets
+  packages: write   # If you're using GitHub Packages for distribution
 
 jobs:
   build:
@@ -32,48 +33,62 @@ jobs:
       - name: Install PyInstaller
         run: pip install pyinstaller
 
-      # macOS build
-      - name: Build for macOS
+      # macOS installer
+      - name: Create macOS .pkg installer
         if: runner.os == 'macOS'
         run: |
           pyinstaller --onefile fusion.py
-          mkdir dist-${{ matrix.os }}
-          mv dist/fusion* dist-${{ matrix.os }}/fusion
-          chmod +x dist-${{ matrix.os }}/fusion
+          mkdir dist-macos
+          mv dist/fusion dist-macos/fusion
+          pkgbuild --identifier com.example.fusion --version 1.0 --install-location /usr/local/bin dist-macos/fusion dist-macos/fusion.pkg
+          # Optionally create a .dmg
+          hdiutil create -volname fusion -srcfolder dist-macos -ov -format UDZO dist-macos/fusion.dmg
 
-      # Windows build
-      - name: Build for Windows
+      # Windows installer
+      - name: Install Inno Setup (Windows)
+        if: runner.os == 'Windows'
+        run: choco install innosetup
+
+      - name: Create Windows .exe installer
         if: runner.os == 'Windows'
         run: |
           pyinstaller --onefile fusion.py
-          mkdir dist-${{ matrix.os }}
-          move dist\\fusion.exe dist-${{ matrix.os }}\\fusion.exe
+          mkdir dist-windows
+          mv dist\\fusion.exe dist-windows\\fusion.exe
+          inno-compiler /INPUT=installer_script.iss /OUTPUT=dist-windows/fusion-installer.exe
 
-      # Linux build
-      - name: Build for Linux
+      # Linux installer (Debian-based)
+      - name: Install fpm (Linux)
+        if: runner.os == 'Linux'
+        run: gem install fpm
+
+      - name: Create Linux .deb installer
         if: runner.os == 'Linux'
         run: |
           pyinstaller --onefile fusion.py
-          mkdir dist-${{ matrix.os }}
-          mv dist/fusion* dist-${{ matrix.os }}/fusion
-          chmod +x dist-${{ matrix.os }}/fusion
+          mkdir dist-linux
+          mv dist/fusion dist-linux/fusion
+          fpm -s dir -t deb -n fusion -v 1.0 --prefix /usr/local/bin dist-linux/fusion
 
-      - name: Upload build artifacts
+      - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fusion-${{ matrix.os }}
-          path: dist-${{ matrix.os }}/*
+          name: fusion-installers
+          path: |
+            dist-macos/*.pkg
+            dist-macos/*.dmg
+            dist-windows/*.exe
+            dist-linux/*.deb
 
   release:
     needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download all artifacts
+      - name: Download all installer artifacts
         uses: actions/download-artifact@v4
         with:
           path: ./artifacts
-          merge-multiple: true
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
