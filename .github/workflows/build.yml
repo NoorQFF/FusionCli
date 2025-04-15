@@ -47,7 +47,13 @@ jobs:
           pyinstaller --onefile fusion.py
           mkdir dist-macos
           mv dist/fusion dist-macos/fusion
-          pkgbuild --identifier com.example.fusion --version 1.0 --install-location /usr/local/bin dist-macos/fusion dist-macos/fusion.pkg
+
+          # Create a directory for packaging
+          mkdir -p /tmp/fusion-package/usr/local/bin
+          cp dist-macos/fusion /tmp/fusion-package/usr/local/bin/
+
+          # Use pkgbuild to create the .pkg installer
+          pkgbuild --identifier com.example.fusion --version 1.0 --install-location /usr/local/bin --root /tmp/fusion-package dist-macos/fusion.pkg
 
       # Windows installer
       - name: Create Windows .exe installer
@@ -56,6 +62,7 @@ jobs:
           pyinstaller --onefile fusion.py
           mkdir dist-windows
           mv dist\\fusion.exe dist-windows\\fusion.exe
+          # Use Inno Setup or NSIS to create the installer
           inno-compiler /INPUT=installer_script.iss /OUTPUT=dist-windows/fusion-installer.exe
 
       # Linux installer (Debian-based)
