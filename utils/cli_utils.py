@@ -1,7 +1,7 @@
 try:
     import curses
 except ImportError:
-    import windows_curses as curses
+    import windows_curses as curses # type: ignore
 
 
 class CustomShell:

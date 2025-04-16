@@ -9,7 +9,7 @@ Compression=lzma
 SolidCompression=yes
 
 [Files]
-Source: "dist-windows\fusion.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "dist\fusion.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\Fusion"; Filename: "{app}\fusion.exe"
