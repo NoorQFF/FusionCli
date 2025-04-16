@@ -1,4 +1,8 @@
-import curses
+try:
+    import curses
+except ImportError:
+    import windows_curses as curses
+
 
 class CustomShell:
     def __init__(self):

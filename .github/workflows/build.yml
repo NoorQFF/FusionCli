@@ -68,7 +68,7 @@ jobs:
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fusion-installers-${{ matrix.os }}
+          name: fusion-installers
           path: |
             dist-macos/*.pkg
             dist-windows/fusion-installer.exe  # Only upload the installer exe, not the raw fusion.exe

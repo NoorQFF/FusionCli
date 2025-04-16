@@ -15,9 +15,9 @@ Source: "dist-windows\fusion.exe"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{autoprograms}\Fusion"; Filename: "{app}\fusion.exe"
 
 [Registry]
-; Add the app's installation path to the PATH environment variable
-Root: HKCU; Subkey: "Environment\Path"; ValueName: "Fusion"; ValueData: "{app}"; Flags: uninsdeletevalue
+; Append {app} to PATH if not already there
+Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; \
+    ValueData: "{olddata};{app}"; Flags: preservestringtype
 
 [Run]
-; Optionally, you can launch the app after installation (optional)
 Filename: "{app}\fusion.exe"; Description: "Launch Fusion"; Flags: nowait postinstall skipifsilent
