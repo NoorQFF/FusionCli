@@ -64,11 +64,12 @@ jobs:
           
           # Use Inno Setup to create the installer
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer_script.iss
+          mv fusion-installer.exe dist-windows\\fusion-installer.exe
 
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: fusion-installers
+          name: fusion-installers-${{ matrix.os }}
           path: |
             dist-macos/*.pkg
             dist-windows/fusion-installer.exe  # Only upload the installer exe, not the raw fusion.exe
