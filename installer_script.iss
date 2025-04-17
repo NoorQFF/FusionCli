@@ -15,9 +15,9 @@ Source: "dist\fusion.exe"; DestDir: "{app}"; Flags: ignoreversion
 Name: "{autoprograms}\Fusion"; Filename: "{app}\fusion.exe"
 
 [Registry]
-; Append {app} to PATH if not already there
+; Append {app}\ to PATH if not already there
 Root: HKCU; Subkey: "Environment"; ValueType: expandsz; ValueName: "Path"; \
-    ValueData: "{olddata};{app}"; Flags: preservestringtype
+    ValueData: "{olddata};{app}\"; Flags: preservestringtype
 
 [Run]
 Filename: "{app}\fusion.exe"; Description: "Launch Fusion"; Flags: nowait postinstall skipifsilent
