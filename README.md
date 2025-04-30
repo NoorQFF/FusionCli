@@ -10,7 +10,7 @@ A cli tool with the following features:
     - [Prerequisites](#prerequisites)
 
 ## Setup and Installation
-Make sure you have aws configurations set for the correct account and role. You can either download the release for your OS or you can build it yourself.
+Make sure you have aws configurations set for the correct account and role. You can either download the release for your OS or you can build it yourself. You might need to setup a python environment.
 
 #### Prerequisites
 - install python
