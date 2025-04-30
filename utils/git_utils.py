@@ -1,12 +1,12 @@
 import os
 import subprocess
-from utils._utils import runSystemFittedProcess, throwError
+from utils._utils import SEPARATOR, runSystemFittedProcess, throwError
 
 def getCurrentGitBranchName():
     return runSystemFittedProcess('git rev-parse --abbrev-ref HEAD')
 
 def getLastBranchedOffBranchName():
-    return runSystemFittedProcess('git reflog | grep "checkout: moving from" | grep -m1 "$(git rev-parse --abbrev-ref HEAD)" | sed -E \'s/.*moving from ([^ ]+) to.*/\1/\'')
+    return runSystemFittedProcess(f'git reflog | grep "checkout:{SEPARATOR}moving{SEPARATOR}from" | grep -m1 "$(git{SEPARATOR}rev-parse{SEPARATOR}--abbrev-ref{SEPARATOR}HEAD)" | sed -E \'s/.*moving from ([^ ]+) to.*/\1/\'')
 
 def getLatestCommitMessage() -> str:
     try:
