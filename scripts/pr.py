@@ -1,7 +1,7 @@
 from utils._utils import SEPARATOR, getBasePathName, runSystemFittedProcess
 from utils.aws_utils import createPullRequestCommand
 from utils.cli_utils import CustomShell
-from utils.git_utils import getCurrentGitBranchName, getLatestCommitMessage
+from utils.git_utils import getCurrentGitBranchName, getLastBranchedOffBranchName, getLatestCommitMessage
 from utils.repo_utils import runTests
 
 def start_aws_pr(args):
@@ -14,10 +14,11 @@ def start_aws_pr(args):
     current_branch = getCurrentGitBranchName()
     latest_commit_message = getLatestCommitMessage().split("\n")[0]
     base_path = getBasePathName()
+    default_target = getLastBranchedOffBranchName()
     default_title = f"{current_branch.upper()}: {latest_commit_message}"
 
     if args.default:
-        target = "development"
+        target = default_target
         repository = base_path
         title = default_title
         desc = ""
